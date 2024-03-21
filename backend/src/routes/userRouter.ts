@@ -6,11 +6,11 @@ const router = express.Router();
 router
   .route('/')
   .post(async (req: Request, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password, confirmPassword } = req.body;
     const user = await User.create({
       email,
       password,
-      confirmPassword: password,
+      confirmPassword,
     });
     res.status(200).json({
       message: 'User created',
