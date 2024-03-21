@@ -1,6 +1,8 @@
 import mongoose, { Model } from 'mongoose';
 import validator from 'validator';
 
+import { encryptPassword } from '../controllers/auth';
+
 import IUser from '../../types/userType';
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -49,9 +51,9 @@ const userSchema = new mongoose.Schema<IUser>({
   },
 });
 
-userSchema.pre('save', function (next) {
-  console.log(this instanceof Model);
-  this.updatedAt = new Date();
+userSchema.pre('save', async function (next) {
+  this.password = await encryptPassword(this.password);
+  this.confirmPassword = '';
   next();
 });
 
