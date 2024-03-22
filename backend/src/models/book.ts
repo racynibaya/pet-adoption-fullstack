@@ -32,6 +32,12 @@ bookSchema.pre<IBook>('findOneAndUpdate', function (this: IBook, next) {
   next();
 });
 
+bookSchema.pre<IBook>(/^find/, async function (next) {
+  const doc = await this.populate('user');
+  doc.populate('pet');
+  next();
+});
+
 const Book = mongoose.model<IBook>('Book', bookSchema);
 
 export default Book;
