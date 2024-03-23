@@ -1,9 +1,10 @@
 import mongoose, { Model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import validator from 'validator';
 
 import { encryptPassword } from '../controllers/auth';
 
-import IUser from '../../types/userType';
+import IUser from '../types/userType';
 
 const userSchema = new mongoose.Schema<IUser>({
   email: {
@@ -67,6 +68,13 @@ userSchema.pre<IUser>(/^find/, function (next) {
 
   next();
 });
+
+userSchema.methods.correctPassword = async function (
+  plainPassword: string,
+  hashPass: string
+): Promise<boolean> {
+  return await bcrypt.compare(plainPassword, hashPass);
+};
 
 const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
