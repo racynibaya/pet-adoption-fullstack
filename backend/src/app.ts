@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
@@ -13,6 +13,12 @@ app.use(cors());
 if ((process.env.NODE_ENV = 'development')) {
   app.use(morgan('dev'));
 }
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // console.log(req.headers);
+
+  next();
+});
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello from the server');
