@@ -13,6 +13,8 @@ interface IUser extends Document {
     candidatePassword: string,
     hashPassword: string
   ) => Promise<boolean>;
+  changePasswordAfter: (JWTTimestamp: number) => boolean;
+  passwordChangedAt: Date;
 }
 
 export default IUser;

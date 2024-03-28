@@ -3,11 +3,12 @@ import { Request, Response } from 'express';
 import User from '../models/user';
 
 export const createUser = async (req: Request, res: Response) => {
-  const { email, password, confirmPassword } = req.body;
+  const { email, password, confirmPassword, passwordChangedAt } = req.body;
   const user = await User.create({
     email,
     password,
     confirmPassword,
+    passwordChangedAt,
   });
   res.status(200).json({
     message: 'User created',

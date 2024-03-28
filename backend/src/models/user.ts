@@ -50,6 +50,7 @@ const userSchema = new mongoose.Schema<IUser>({
     type: Date,
     default: Date.now,
   },
+  passwordChangedAt: Date,
 });
 
 userSchema.pre('save', async function (next) {
@@ -74,6 +75,21 @@ userSchema.methods.correctPassword = async function (
   hashPass: string
 ): Promise<boolean> {
   return await bcrypt.compare(plainPassword, hashPass);
+};
+
+userSchema.methods.changePasswordAfter = function (
+  this: IUser,
+  JWTTimestamp: number
+) {
+  console.log(this, 'LINE 84');
+  if (this.passwordChangedAt) {
+    const currentTimeStamp = this.passwordChangedAt.getTime();
+    const changedTimestamp = parseInt(`${currentTimeStamp / 1000}`, 10);
+    console.log(changedTimestamp, JWTTimestamp);
+
+    return JWTTimestamp < changedTimestamp;
+  }
+  return false;
 };
 
 const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);

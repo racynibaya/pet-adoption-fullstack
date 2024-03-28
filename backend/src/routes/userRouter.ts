@@ -6,11 +6,11 @@ import {
   getAllUser,
   getUser,
 } from '../controllers/userController';
-import { login } from '../controllers/auth';
+import { login, protect } from '../controllers/auth';
 
 const router = express.Router();
 
-router.route('/').post(createUser).get(getAllUser);
+router.route('/').post(createUser).get(protect, getAllUser);
 
 router.route('/:id').delete(deleteUser).get(getUser);
 
