@@ -70,7 +70,7 @@ export const protect = async (
     token = req.headers.authorization.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ message: 'Unathorized' });
+    return res.status(403).json({ message: 'Unathorized' });
   }
 
   // const decoded: { id: string; iat: number; exp: number } = verifyToken(token);
@@ -79,10 +79,7 @@ export const protect = async (
     process.env.JWT_SECRET!
   ) as DecodedType;
 
-  console.log(decoded);
   const currentUser = await User.findById(decoded.id);
-
-  console.log(currentUser);
 
   if (!currentUser) {
     return res.status(401).json({

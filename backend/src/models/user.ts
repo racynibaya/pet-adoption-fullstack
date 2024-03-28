@@ -81,11 +81,9 @@ userSchema.methods.changePasswordAfter = function (
   this: IUser,
   JWTTimestamp: number
 ) {
-  console.log(this, 'LINE 84');
   if (this.passwordChangedAt) {
     const currentTimeStamp = this.passwordChangedAt.getTime();
     const changedTimestamp = parseInt(`${currentTimeStamp / 1000}`, 10);
-    console.log(changedTimestamp, JWTTimestamp);
 
     return JWTTimestamp < changedTimestamp;
   }

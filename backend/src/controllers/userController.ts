@@ -48,7 +48,9 @@ export const getUser = async (req: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const user = await User.findById({ id });
+  const user = await User.findById(id);
+
+  console.log(user);
 
   if (!user) {
     return res.status(404).json({
@@ -57,7 +59,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     });
   }
 
-  const deleteUser = await User.findByIdAndDelete({ id });
+  const deleteUser = await User.findByIdAndDelete(id);
 
   res.status(204).json({
     status: 'success',
