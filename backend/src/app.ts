@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import userRouter from './routes/user.router';
 import petRouter from './routes/pet.router';
 
+import AppError from './utils/app.error';
+
 const app = express();
 
 app.use(express.json());
@@ -15,8 +17,7 @@ if ((process.env.NODE_ENV = 'development')) {
 }
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-  const err = new Error('Something went wrong');
-  next(err);
+  next(new AppError('Something went wrong', 404));
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -35,8 +36,6 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/pets', petRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.log(err);
-
   res.status(500).json({ message: 'Something went wrong', err });
 });
 export default app;
