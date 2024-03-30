@@ -2,8 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
-import userRouter from './routes/userRouter';
-import petRouter from './routes/petRouter';
+import userRouter from './routes/user.router';
+import petRouter from './routes/pet.router';
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/health', (req: Request, res: Response) => {
-  res.send('Hello from the server');
+  res.send('Healthy');
 });
 
 app.use('/api/v1/users', userRouter);

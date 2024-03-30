@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
-import IUser from '../types/userType';
+import IUser from '../types/user.type';
 
 interface RequestWithUser extends Request {
   user: IUser;

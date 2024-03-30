@@ -2,9 +2,9 @@ import mongoose, { Model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 
-import { encryptPassword } from '../controllers/auth';
+import { encryptPassword } from '../controllers/auth.controller';
 
-import IUser from '../types/userType';
+import IUser from '../types/user.type';
 
 const userSchema = new mongoose.Schema<IUser>({
   email: {
@@ -90,6 +90,6 @@ userSchema.methods.changePasswordAfter = function (
   return false;
 };
 
-const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
+const User = mongoose.model<IUser>('User', userSchema);
 
 export default User;

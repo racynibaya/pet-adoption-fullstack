@@ -1,11 +1,5 @@
-import mongoose, { Types, Document, Model } from 'mongoose';
-
-interface ITestimonial extends Document {
-  user: Types.ObjectId;
-  pet: Types.ObjectId;
-  createdAt: Date;
-  udpatedAt: Date;
-}
+import mongoose from 'mongoose';
+import { ITestimonial } from '../types';
 
 const testimonialSchema = new mongoose.Schema<ITestimonial>({
   user: {
@@ -51,7 +45,7 @@ testimonialSchema.pre<ITestimonial>(
   }
 );
 
-const Testimonial: Model<ITestimonial> = mongoose.model<ITestimonial>(
+const Testimonial = mongoose.model<ITestimonial>(
   'Testimonial',
   testimonialSchema
 );

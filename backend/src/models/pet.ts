@@ -1,15 +1,6 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
+import { IPet } from '../types';
 
-interface IPet extends Document {
-  name: string;
-  species: string;
-  breed?: string;
-  color?: string;
-  gender: 'M' | 'F';
-  age?: number;
-  traits: string[];
-  description?: string;
-}
 const petSchema = new mongoose.Schema<IPet>({
   name: {
     type: String,

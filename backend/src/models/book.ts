@@ -1,11 +1,5 @@
-import mongoose, { Document, Types } from 'mongoose';
-
-interface IBook extends Document {
-  user: Types.ObjectId;
-  pet: Types.ObjectId;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import mongoose from 'mongoose';
+import { IBook } from '../types';
 
 // This schema is to book a visit a pet
 const bookSchema = new mongoose.Schema<IBook>({
