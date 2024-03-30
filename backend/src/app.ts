@@ -14,6 +14,11 @@ if ((process.env.NODE_ENV = 'development')) {
   app.use(morgan('dev'));
 }
 
+app.all('*', (req: Request, res: Response, next: NextFunction) => {
+  const err = new Error('Something went wrong');
+  next(err);
+});
+
 app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
@@ -29,4 +34,9 @@ app.get('/health', (req: Request, res: Response) => {
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/pets', petRouter);
 
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log(err);
+
+  res.status(500).json({ message: 'Something went wrong', err });
+});
 export default app;

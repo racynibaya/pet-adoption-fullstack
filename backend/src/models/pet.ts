@@ -1,5 +1,5 @@
 import mongoose, { Model } from 'mongoose';
-import { IPet } from '../types';
+import IPet from '../types/pet.type';
 
 const petSchema = new mongoose.Schema<IPet>({
   name: {

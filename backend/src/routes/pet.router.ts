@@ -1,24 +1,13 @@
-import express, { Request, Response } from 'express';
-import Pet from '../models/pet';
+import express from 'express';
+
+import { protect } from '../controllers/auth.controller';
+
+import { createPet, addFavoriteToUser } from '../controllers/pet.controller';
 
 const router = express.Router();
 
-router.route('/').post(async (req: Request, res: Response) => {
-  const { name, species, breed, color, gender, traits, description } = req.body;
-  const pet = await Pet.create({
-    name,
-    species,
-    breed,
-    color,
-    gender,
-    traits,
-    description,
-  });
+router.route('/').post(createPet);
 
-  res.status(201).json({
-    message: 'created',
-    pet,
-  });
-});
+router.route('/:id').patch(protect, addFavoriteToUser);
 
 export default router;

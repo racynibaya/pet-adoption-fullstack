@@ -1,9 +1,8 @@
-import mongoose, { Model } from 'mongoose';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 
 import { encryptPassword } from '../controllers/auth.controller';
-
 import IUser from '../types/user.type';
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -54,8 +53,11 @@ const userSchema = new mongoose.Schema<IUser>({
 });
 
 userSchema.pre('save', async function (next) {
-  this.password = await encryptPassword(this.password);
-  this.confirmPassword = '';
+  if (this.password) {
+    this.password = await encryptPassword(this.password);
+    this.confirmPassword = '';
+  }
+
   next();
 });
 
