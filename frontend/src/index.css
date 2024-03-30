@@ -1,10 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
+    --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
@@ -33,6 +35,28 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    --gradient: hsla(29, 92%, 70%, 1);
+
+    --gradient: linear-gradient(
+      90deg,
+      hsla(29, 92%, 70%, 1) 0%,
+      hsla(0, 87%, 73%, 1) 100%
+    );
+
+    --gradient: -moz-linear-gradient(
+      90deg,
+      hsla(29, 92%, 70%, 1) 0%,
+      hsla(0, 87%, 73%, 1) 100%
+    );
+
+    --gradient: -webkit-linear-gradient(
+      90deg,
+      hsla(29, 92%, 70%, 1) 0%,
+      hsla(0, 87%, 73%, 1) 100%
+    );
+
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#F9B16E", endColorstr="#F68080", GradientType=1 );
   }
 
   .dark {
@@ -71,6 +95,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-slate-600;
   }
+}
+
+html {
+  font-family: 'Rubik', sans-serif;
 }

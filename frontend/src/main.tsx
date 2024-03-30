@@ -1,18 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import AppRoutes from './AppRoutes.tsx';
-import { BrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import AuthProviderWithNavigate from '../auth/AuthProviderWithNavigate.tsx';
+import './index.css';
+import Hero from './pages/Hero';
+import HeroLayout from './layouts/HeroLayout';
 
-import './global.css';
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: (
+      <HeroLayout>
+        <Hero />
+      </HeroLayout>
+    ),
+  },
+  {
+    path: '/test',
+    element: <h1>Test Page</h1>,
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthProviderWithNavigate>
-        <AppRoutes />
-      </AuthProviderWithNavigate>
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
