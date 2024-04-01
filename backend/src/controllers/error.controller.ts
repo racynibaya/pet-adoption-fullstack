@@ -15,26 +15,34 @@ interface DuplicateTypeError extends Error {
   keyValue: { email: string };
 }
 
-interface ValidationTypeError extends Error {
-  errors: ValidationEmailError | ValidationPasswordError;
+interface ValidationErrors extends Error {
+  errors: {
+    email?: ValidationTypeError;
+    password?: ValidationTypeError;
+  };
 }
 
-type ValidationEmailError = {
-  email: {
-    name: string;
+type ValidationTypeError = {
+  name: string;
+  message: string;
+  properties: {
     message: string;
-    kind: string;
+    type: string;
     path: string;
     value: string;
   };
+  kind: string;
+  path: string;
+  value: string;
 };
 
-type ValidationPasswordError {}
+// type ValidationPasswordError {}
 
-const validatorErrorDB = (err: ValidationTypeError, res: Response) => {
-  console.log(err);
-  const { errors } = err;
-  const message = `Invalid ${errors.email.path}: ${errors.email.value}`;
+const validatorErrorDB = (err: ValidationErrors, res: Response) => {
+  const errors: ValidationTypeError[] = Object.values(err.errors);
+
+  const errMessages = errors.map((el) => el.message);
+  let message = `Invalid values: ${errMessages.join('. ')}`;
   return new AppError(message, 500);
 };
 
