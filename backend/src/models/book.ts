@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { IBook } from '../types';
+import IBook from '../types/booking.type';
 
 // This schema is to book a visit a pet
 const bookSchema = new mongoose.Schema<IBook>({

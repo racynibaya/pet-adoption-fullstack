@@ -4,7 +4,7 @@ import IPet from '../types/pet.type';
 const petSchema = new mongoose.Schema<IPet>({
   name: {
     type: String,
-    min: 2,
+    minlength: 2,
     required: [true, 'Please provide name for pet'],
   },
   species: {

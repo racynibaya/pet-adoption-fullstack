@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    min: 8,
+    minlength: 8,
     select: false,
   },
   confirmPassword: {
@@ -28,7 +28,6 @@ const userSchema = new mongoose.Schema<IUser>({
       },
       message: 'Passwords are not the same!',
     },
-    select: false,
   },
   role: {
     type: String,
