@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/user';
+import { catchAsync } from '../utils/catchAsync';
+import AppError from '../utils/app.error';
 
 interface DecodedType {
   id: string;
@@ -16,21 +18,21 @@ const signToken = (id: string) => {
   });
 };
 
-export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  let token: string | undefined;
+export const login = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    let token: string | undefined;
 
-  try {
     // check if there's an email and password
     if (!email || !password) {
-      return res.status(404).json({ message: 'User not found' });
+      return next(new AppError('User not found', 404));
     }
 
     // check if user is existing
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return next(new AppError('User not found', 404));
     }
 
     // compare input and password in db
@@ -40,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
     );
 
     if (!isPasswordMatched) {
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return next(new AppError('Invalid email or password', 401));
     }
 
     const copiedUser = JSON.parse(JSON.stringify(user));
@@ -49,48 +51,41 @@ export const login = async (req: Request, res: Response) => {
     token = signToken(user._id);
 
     res.status(200).json({ user: copiedUser, token });
-  } catch (err) {
-    console.log(err);
   }
-  // send a token
-};
+);
 
-export const protect = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  let token: string = '';
+export const protect = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    let token: string = '';
 
-  if (req.headers.authorization?.startsWith('Bearer'))
-    token = req.headers.authorization.split(' ')[1];
+    if (req.headers.authorization?.startsWith('Bearer'))
+      token = req.headers.authorization.split(' ')[1];
 
-  if (!token) {
-    return res.status(403).json({ message: 'Unathorized' });
+    if (!token) {
+      return next(new AppError('Unauthorized', 403));
+    }
+
+    // const decoded: { id: string; iat: number; exp: number } = verifyToken(token);
+    const decoded: DecodedType = jwt.verify(
+      token,
+      process.env.JWT_SECRET!
+    ) as DecodedType;
+
+    const currentUser = await User.findById(decoded.id);
+
+    if (!currentUser) {
+      return next(new AppError('No current user', 404));
+    }
+
+    if (currentUser.changePasswordAfter(decoded.iat)) {
+      return next(
+        new AppError('User recently changed password! Please log in again', 401)
+      );
+    }
+    req.user = currentUser;
+    next();
   }
-
-  // const decoded: { id: string; iat: number; exp: number } = verifyToken(token);
-  const decoded: DecodedType = jwt.verify(
-    token,
-    process.env.JWT_SECRET!
-  ) as DecodedType;
-
-  const currentUser = await User.findById(decoded.id);
-
-  if (!currentUser) {
-    return res.status(401).json({
-      message: 'No current user',
-    });
-  }
-
-  if (currentUser.changePasswordAfter(decoded.iat)) {
-    return res.status(401).json({
-      message: 'User recently changed password! Please log in again.',
-    });
-  }
-  req.user = currentUser;
-  next();
-};
+);
 
 export const encryptPassword = async (password: string) => {
   const hashPassword = await bcrypt.hash(password, 12);

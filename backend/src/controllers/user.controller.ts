@@ -1,8 +1,10 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import User from '../models/user';
+import { catchAsync } from '../utils/catchAsync';
+import AppError from '../utils/app.error';
 
-export const createUser = async (req: Request, res: Response) => {
+export const createUser = catchAsync(async (req: Request, res: Response) => {
   const { email, password, confirmPassword, passwordChangedAt } = req.body;
   const user = await User.create({
     email,
@@ -10,60 +12,64 @@ export const createUser = async (req: Request, res: Response) => {
     confirmPassword,
     passwordChangedAt,
   });
+
   res.status(200).json({
     message: 'User created',
     user,
   });
-};
+});
 
-export const getAllUser = async (req: Request, res: Response) => {
-  const users = await User.find();
-  res.status(200).json({
-    message: 'success',
-    data: {
-      users,
-    },
-  });
-};
+export const getAllUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const users = await User.find();
 
-export const getUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
+    if (!users) {
+      next(new AppError('No user exist', 404));
+    }
 
-  const user = await User.findById({ _id: id });
-
-  if (!user) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'No existing user',
+    res.status(200).json({
+      message: 'success',
+      data: {
+        users,
+      },
     });
   }
+);
 
-  res.status(200).json({
-    status: 'success',
-    message: 'Successfully get the user',
-    user,
-  });
-};
+export const getUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
 
-export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.params;
+    const user = await User.findById({ _id: id });
 
-  const user = await User.findById(id);
+    if (!user) {
+      next(new AppError('No existing user', 404));
+    }
 
-  console.log(user);
-
-  if (!user) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'No existing user',
+    res.status(200).json({
+      status: 'success',
+      message: 'Successfully get the user',
+      user,
     });
   }
+);
 
-  const deleteUser = await User.findByIdAndDelete(id);
+export const deleteUser = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
 
-  res.status(204).json({
-    status: 'success',
-    message: 'User sucessfully deleted',
-    deleteUser,
-  });
-};
+    const user = await User.findById(id);
+
+    if (!user) {
+      next(new AppError('No existing user', 404));
+    }
+
+    const deleteUser = await User.findByIdAndDelete(id);
+
+    res.status(204).json({
+      status: 'success',
+      message: 'User sucessfully deleted',
+      deleteUser,
+    });
+  }
+);
