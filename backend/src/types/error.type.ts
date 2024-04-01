@@ -1,9 +1,10 @@
-interface IError {
+import AppError from '../utils/app.error';
+
+interface IError extends AppError {
   status: string;
-  isOperational: string;
+  isOperational: boolean;
   message: string;
   statusCode: number;
-  stack: Error;
 }
 
 export default IError;

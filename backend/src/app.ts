@@ -1,14 +1,14 @@
 import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
+import dotenv from 'dotenv';
 
 import userRouter from './routes/user.router';
 import petRouter from './routes/pet.router';
 
 import globalErrorHandler from './controllers/error.controller';
 
-import AppError from './utils/app.error';
-
+dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -19,6 +19,7 @@ if ((process.env.NODE_ENV = 'development')) {
 }
 
 app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(process.env.NODE_ENV);
   next();
 });
 
