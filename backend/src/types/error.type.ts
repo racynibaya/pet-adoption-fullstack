@@ -3,6 +3,7 @@ interface IError {
   isOperational: string;
   message: string;
   statusCode: number;
+  stack: Error;
 }
 
 export default IError;
