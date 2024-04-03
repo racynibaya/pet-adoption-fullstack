@@ -38,7 +38,7 @@ type ValidationTypeError = {
 
 // type ValidationPasswordError {}
 
-const validatorErrorDB = (err: ValidationErrors, res: Response) => {
+const validatorErrorDB = (err: ValidationErrors) => {
   const errors: ValidationTypeError[] = Object.values(err.errors);
 
   const errMessages = errors.map((el) => el.message);
@@ -90,10 +90,9 @@ export default (
     developementError(error, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = JSON.parse(JSON.stringify(err));
-    console.log(error);
 
     if (error.name === 'ValidationError') {
-      error = validatorErrorDB(error, res);
+      error = validatorErrorDB(error);
     } else if (error.code === 11000) {
       error = duplicateErrorDB(error);
     }

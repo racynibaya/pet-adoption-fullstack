@@ -40,12 +40,13 @@ export const addFavoriteToUser = catchAsync(
     }
 
     currentUser.favorites.push(pet._id);
-    currentUser.save();
 
+    const newPet = await currentUser.save();
+    console.log(newPet);
     res.status(200).json({
       status: 'success',
       message: 'Pet is added to this user',
-      pet,
+      pet: newPet,
     });
   }
 );

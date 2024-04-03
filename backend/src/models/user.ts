@@ -4,6 +4,7 @@ import validator from 'validator';
 
 import { encryptPassword } from '../controllers/auth.controller';
 import IUser from '../types/user.type';
+import AppError from '../utils/app.error';
 
 const userSchema = new mongoose.Schema<IUser>({
   email: {
@@ -20,7 +21,9 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   confirmPassword: {
     type: String,
-    required: [true, 'Please confirm your password'],
+    required: function (this: IUser) {
+      return this.isModified('password');
+    },
     validate: {
       //   This only works on CREATE and SAVE!!!
       validator: function (this: IUser, el: string) {
@@ -53,8 +56,9 @@ const userSchema = new mongoose.Schema<IUser>({
 
 userSchema.pre('save', async function (next) {
   if (this.password) {
+    console.log(this.password);
     this.password = await encryptPassword(this.password);
-    this.confirmPassword = '';
+    this.confirmPassword = undefined;
   }
 
   next();
