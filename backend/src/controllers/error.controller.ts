@@ -46,6 +46,11 @@ const validatorErrorDB = (err: ValidationErrors) => {
   return new AppError(message, 500);
 };
 
+const noRouteExistHandler = (err: AppErrorType) => {
+  const message = `You're accessing route that doesn't exist`;
+  return new AppError(message, 404);
+};
+
 const duplicateErrorDB = (err: DuplicateTypeError) => {
   const message = `Duplicate field value: ${err.keyValue.email}. Please use another email`;
 
@@ -95,6 +100,8 @@ export default (
       error = validatorErrorDB(error);
     } else if (error.code === 11000) {
       error = duplicateErrorDB(error);
+    } else {
+      error = noRouteExistHandler(error);
     }
 
     productionError(error, res);
