@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import userRouter from './routes/user.router';
 import petRouter from './routes/pet.router';
+import bookRouter from './routes/book.router';
 
 import globalErrorHandler from './controllers/error.controller';
 import AppError from './utils/app.error';
@@ -34,6 +35,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/pets', petRouter);
+app.use('/api/v1/books', bookRouter);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`You're trying to access a route that doesn't exist`, 404));

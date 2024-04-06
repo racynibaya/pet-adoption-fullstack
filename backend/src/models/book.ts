@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Model, Document, Query } from 'mongoose';
 import IBook from '../types/booking.type';
 
 // This schema is to book a visit a pet
@@ -23,12 +23,6 @@ const bookSchema = new mongoose.Schema<IBook>({
 
 bookSchema.pre<IBook>('findOneAndUpdate', function (this: IBook, next) {
   this.updatedAt = new Date();
-  next();
-});
-
-bookSchema.pre<IBook>(/^find/, async function (next) {
-  const doc = await this.populate('user');
-  doc.populate('pet');
   next();
 });
 

@@ -26,6 +26,8 @@ const petSchema = new mongoose.Schema<IPet>({
   description: String,
 });
 
+petSchema.index({ name: 1, species: 1 }, { unique: true });
+
 const Pet: Model<IPet> = mongoose.model<IPet>('Pet', petSchema);
 
 export default Pet;

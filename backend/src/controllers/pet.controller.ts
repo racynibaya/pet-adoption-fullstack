@@ -23,6 +23,39 @@ export const createPet = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+export const getAllPets = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const pets = await Pet.find();
+
+    if (!pets.length) {
+      return next(new AppError('No pets available', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: pets,
+    });
+  }
+);
+
+export const getPetById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const pet = await Pet.findById(id);
+
+    if (!pet) {
+      next(new AppError(`This pet with id: ${id} does'nt exist`, 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        pet,
+      },
+    });
+  }
+);
+
 export const addFavoriteToUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
@@ -47,6 +80,25 @@ export const addFavoriteToUser = catchAsync(
       status: 'success',
       message: 'Pet is added to this user',
       pet: newPet,
+    });
+  }
+);
+
+export const deletePetById = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+
+    const petToDelete = await Pet.findById(id);
+
+    if (!petToDelete) {
+      next(new AppError(`This pet does'nt exits`, 404));
+    }
+
+    await Pet.deleteOne({ _id: id });
+
+    res.status(204).json({
+      status: 'success',
+      message: 'Pet already deleted',
     });
   }
 );

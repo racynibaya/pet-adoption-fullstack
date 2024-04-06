@@ -52,12 +52,13 @@ const noRouteExistHandler = (err: AppErrorType) => {
 };
 
 const duplicateErrorDB = (err: DuplicateTypeError) => {
+  console.log(err);
   const message = `Duplicate field value: ${err.keyValue.email}. Please use another email`;
 
   return new AppError(message, 500);
 };
 
-const developementError = (err: AppErrorType, res: Response) => {
+const developementError = (err: AppError, res: Response) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || 'error';
   res.status(err.statusCode).json({
@@ -91,8 +92,7 @@ export default (
   next: NextFunction
 ) => {
   if (process.env.NODE_ENV === 'development') {
-    let error = JSON.parse(JSON.stringify(err));
-    developementError(error, res);
+    developementError(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     let error = JSON.parse(JSON.stringify(err));
 
