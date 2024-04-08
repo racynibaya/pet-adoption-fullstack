@@ -6,6 +6,7 @@ declare global {
       JWT_SECRET: string;
       JWT_EXPIRES_IN: string;
       NODE_ENV: string;
+      JWT_COOKIES_EXPIRES_IN: number;
     }
   }
 }

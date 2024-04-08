@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/app.error';
+import IUser from '../types/user.type';
 
 interface DecodedType {
   id: string;
@@ -91,4 +92,28 @@ export const encryptPassword = async (password: string) => {
   const hashPassword = await bcrypt.hash(password, 12);
 
   return hashPassword;
+};
+
+export const createAndSendToken = (
+  user: IUser,
+  statusCode: number,
+  res: Response
+) => {
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    secure: false,
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  res.cookie('jwt', token, cookieOptions);
+  res.status(statusCode).json({
+    message: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
 };

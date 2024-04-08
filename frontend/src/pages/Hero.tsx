@@ -1,14 +1,15 @@
 import { Link } from 'react-router-dom';
 import MobileNav from '../components/MobileNav';
 import Navbar from '../components/Navbar';
+
 import logo from '@/assets/logo.png';
-// import heroImage from '@/assets/hero.jpg';
+import heroImage from '@/assets/hero.jpg';
 import { Button } from '@/components/ui/button';
 
 const Hero = () => {
   return (
     <>
-      <div className='md:hidden'>
+      <div className='md:hidden px-2'>
         <div className='flex justify-between'>
           <Link to='/'>
             <img
@@ -20,16 +21,22 @@ const Hero = () => {
           <MobileNav />
         </div>
 
-        <div className='flex flex-col'>
-          <h1 className='text-6xl font-bold text-slate-600 text-center pt-28'>
+        <div className='flex flex-col gap-6 text-center'>
+          <h1 className='text-6xl font-bold text-slate-600  pt-16'>
             FurEver Finds
           </h1>
 
-          <p className='leading-6 text-gray-500 p-4'>
+          <p className='leading-6 text-gray-500'>
             Discover loyal companions waiting to bring joy into your life.
             Adopt, don't shop, and make a difference in a pet's life. Begin your
             heartwarming journey now!
           </p>
+
+          <img
+            src={heroImage}
+            alt='Image of a brown dog'
+            className='rounded-lg mb-5'
+          />
         </div>
 
         <div className='flex gap-2'>

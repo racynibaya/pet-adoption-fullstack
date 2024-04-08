@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import User from '../models/user';
 import { catchAsync } from '../utils/catchAsync';
 import AppError from '../utils/app.error';
+import { createAndSendToken } from './auth.controller';
 
 export const createUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -14,10 +15,7 @@ export const createUser = catchAsync(
       passwordChangedAt,
     });
 
-    res.status(200).json({
-      message: 'User created',
-      user,
-    });
+    createAndSendToken(user, 200, res);
   }
 );
 
