@@ -13,7 +13,7 @@ interface DecodedType {
   exp: number;
 }
 
-const signToken = (id: string) => {
+export const signToken = (id: string) => {
   return jwt.sign({ id }, process.env.JWT_SECRET!, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
@@ -48,10 +48,8 @@ export const login = catchAsync(
 
     const copiedUser = JSON.parse(JSON.stringify(user));
     delete copiedUser.password;
-    // generate a token
-    token = signToken(user._id);
-
-    res.status(200).json({ user: copiedUser, token });
+    // generate and send a token
+    createAndSendToken(user, 200, res);
   }
 );
 

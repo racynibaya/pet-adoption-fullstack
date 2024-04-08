@@ -4,7 +4,6 @@ import validator from 'validator';
 
 import { encryptPassword } from '../controllers/auth.controller';
 import IUser from '../types/user.type';
-import AppError from '../utils/app.error';
 
 const userSchema = new mongoose.Schema<IUser>({
   email: {

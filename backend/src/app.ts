@@ -29,8 +29,6 @@ app.use(cors());
 // Data sanitization against NOSql injection
 app.use(mongoSantize());
 
-// Data sanitization agains XSS attack
-
 if ((process.env.NODE_ENV = 'development')) {
   app.use(morgan('dev'));
 }
